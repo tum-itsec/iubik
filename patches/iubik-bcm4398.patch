@@ -1,0 +1,52 @@
+diff --git a/dhd_linux.c b/dhd_linux.c
+index df645bb..0938e19 100644
+--- a/dhd_linux.c
++++ b/dhd_linux.c
+@@ -5760,7 +5760,7 @@ dhd_add_monitor_if(dhd_info_t *dhd)
+ 
+ 	devname = "radiotap";
+ 
+-	snprintf(dev->name, sizeof(dev->name), "%s%u", devname, dhd->unit);
++	snprintf(dev->name, sizeof__net_device__name, "%s%u", devname, dhd->unit);
+ 
+ #ifndef ARPHRD_IEEE80211_PRISM  /* From Linux 2.4.18 */
+ #define ARPHRD_IEEE80211_PRISM 802
+diff --git a/wl_cfgnan.c b/wl_cfgnan.c
+index 7b16468..40dde31 100644
+--- a/wl_cfgnan.c
++++ b/wl_cfgnan.c
+@@ -10468,7 +10468,7 @@ wl_cfgnan_register_nmi_ndev(struct bcm_cfg80211 *cfg)
+ 		return -ENOMEM;
+ 	}
+ 
+-	strlcpy(ndev->name, NMI_IFNAME, sizeof(ndev->name));
++	strlcpy(ndev->name, NMI_IFNAME, sizeof__net_device__name);
+ 
+ 	/* Copy the reference to bcm_cfg80211 */
+ 	priv = (struct bcm_cfg80211 **)netdev_priv(ndev);
+diff --git a/wl_cfgp2p.c b/wl_cfgp2p.c
+index bfa70e8..85aaf21 100644
+--- a/wl_cfgp2p.c
++++ b/wl_cfgp2p.c
+@@ -2548,7 +2548,7 @@ wl_cfgp2p_register_ndev(struct bcm_cfg80211 *cfg)
+ 	}
+ #endif /* WL_NEWCFG_PRIVCMD_SUPPORT */
+ 
+-	strlcpy(net->name, "p2p%d", sizeof(net->name));
++	strlcpy(net->name, "p2p%d", sizeof__net_device__name);
+ 
+ 	/* Copy the reference to bcm_cfg80211 */
+ 	memcpy((void *)netdev_priv(net), &cfg, sizeof(struct bcm_cfg80211 *));
+diff --git a/wl_linux_mon.c b/wl_linux_mon.c
+index 641bbc4..6240762 100644
+--- a/wl_linux_mon.c
++++ b/wl_linux_mon.c
+@@ -326,7 +326,7 @@ int dhd_add_monitor(const char *name, struct net_device **new_ndev)
+ 	}
+ 
+ 	ndev->type = ARPHRD_IEEE80211_RADIOTAP;
+-	strlcpy(ndev->name, name, sizeof(ndev->name));
++	strlcpy(ndev->name, name, sizeof__net_device__name);
+ 	ndev->netdev_ops = &dhd_mon_if_ops;
+ 
+ 	ret = dhd_register_net(ndev, true);

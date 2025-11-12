@@ -1,0 +1,79 @@
+diff --git a/dhd_linux.c b/wlan/bcm4383/dhd_linux.c
+index 0242a01..3af4e65 100644
+--- a/dhd_linux.c
++++ b/dhd_linux.c
+@@ -5725,7 +5725,7 @@ dhd_add_monitor_if(dhd_info_t *dhd)
+ 
+ 	devname = "radiotap";
+ 
+-	snprintf(dev->name, sizeof(dev->name), "%s%u", devname, dhd->unit);
++	snprintf(dev->name, sizeof__net_device__name, "%s%u", devname, dhd->unit);
+ 
+ #ifndef ARPHRD_IEEE80211_PRISM  /* From Linux 2.4.18 */
+ #define ARPHRD_IEEE80211_PRISM 802
+@@ -14498,7 +14498,7 @@ int dhd_inet6addr_notifier_call(struct notifier_block *this, unsigned long event
+ 	/* fill up ndo_info */
+ 	ndo_info->event = event;
+ 	ndo_info->if_idx = idx;
+-	memcpy(ndo_info->ipv6_addr, &inet6_ifa->addr, IPV6_ADDR_LEN);
++	memcpy(ndo_info->ipv6_addr, inet6_ifa->addr, IPV6_ADDR_LEN);
+ 
+ 	/* defer the work to thread as it may block kernel */
+ 	dhd_deferred_schedule_work(dhd->dhd_deferred_wq, (void *)ndo_info, DHD_WQ_WORK_IPV6_NDO,
+@@ -16913,7 +16913,7 @@ dhd_dev_ndo_update_inet6addr(struct net_device *dev)
+ 		/* DAD failed unicast address */
+ 		if ((ifa->flags & IFA_F_DADFAILED) &&
+ 			(cnt < dhdp->ndo_max_host_ip)) {
+-				memcpy(&ipv6_addr[cnt], &ifa->addr, sizeof(struct in6_addr));
++				memcpy(&ipv6_addr[cnt], ifa->addr, sizeof(struct in6_addr));
+ 				cnt++;
+ 		}
+ 	}
+@@ -16948,7 +16948,7 @@ dhd_dev_ndo_update_inet6addr(struct net_device *dev)
+ 			/* valid unicast address */
+ 			if (!(ifa->flags & IFA_F_DADFAILED) &&
+ 				(cnt < dhdp->ndo_max_host_ip)) {
+-					memcpy(&ipv6_addr[cnt], &ifa->addr,
++					memcpy(&ipv6_addr[cnt], ifa->addr,
+ 						sizeof(struct in6_addr));
+ 					cnt++;
+ 			}
+diff --git a/wl_cfgnan.c b/wlan/bcm4383/wl_cfgnan.c
+index 658d9b3..72c56df 100644
+--- a/wl_cfgnan.c
++++ b/wl_cfgnan.c
+@@ -10472,7 +10472,7 @@ wl_cfgnan_register_nmi_ndev(struct bcm_cfg80211 *cfg)
+ 		return -ENOMEM;
+ 	}
+ 
+-	strlcpy(ndev->name, NMI_IFNAME, sizeof(ndev->name));
++	strlcpy(ndev->name, NMI_IFNAME, sizeof__net_device__name);
+ 
+ 	/* Copy the reference to bcm_cfg80211 */
+ 	priv = (struct bcm_cfg80211 **)netdev_priv(ndev);
+diff --git a/wl_cfgp2p.c b/wlan/bcm4383/wl_cfgp2p.c
+index 3ae9a06..de8a775 100644
+--- a/wl_cfgp2p.c
++++ b/wl_cfgp2p.c
+@@ -2553,7 +2553,7 @@ wl_cfgp2p_register_ndev(struct bcm_cfg80211 *cfg)
+ 	}
+ #endif /* WL_NEWCFG_PRIVCMD_SUPPORT */
+ 
+-	strlcpy(net->name, "p2p%d", sizeof(net->name));
++	strlcpy(net->name, "p2p%d", sizeof__net_device__name);
+ 
+ 	/* Copy the reference to bcm_cfg80211 */
+ 	memcpy((void *)netdev_priv(net), &cfg, sizeof(struct bcm_cfg80211 *));
+diff --git a/wl_linux_mon.c b/wlan/bcm4383/wl_linux_mon.c
+index 641bbc4..6240762 100644
+--- a/wl_linux_mon.c
++++ b/wl_linux_mon.c
+@@ -326,7 +326,7 @@ int dhd_add_monitor(const char *name, struct net_device **new_ndev)
+ 	}
+ 
+ 	ndev->type = ARPHRD_IEEE80211_RADIOTAP;
+-	strlcpy(ndev->name, name, sizeof(ndev->name));
++	strlcpy(ndev->name, name, sizeof__net_device__name);
+ 	ndev->netdev_ops = &dhd_mon_if_ops;
+ 
+ 	ret = dhd_register_net(ndev, true);
